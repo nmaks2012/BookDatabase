@@ -21,6 +21,7 @@ template <BookContainerLike T>
 HistogramContainer buildAuthorHistogramFlat(BookDatabase<T> &cont) {
 
     HistogramContainer histogram;
+    histogram.reserve(cont.GetAuthors().size());
 
     std::ranges::for_each(cont, [&](const Book &book) { histogram[book.author]++; });
 

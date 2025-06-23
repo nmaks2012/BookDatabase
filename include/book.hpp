@@ -44,12 +44,12 @@ struct Book {
     double rating;
     int read_count;
 
-    constexpr Book(std::string_view author, std::string &&title, int year, std::string_view genre, double rating,
+    constexpr Book(std::string_view author, std::string title, int year, std::string_view genre, double rating,
                    int read_count)
         : author(author), title(title), year(year), genre(ConvertGenre(genre)), rating(rating),
           read_count(read_count) {};
 
-    constexpr Book(std::string_view author, std::string &&title, int year, Genre genre, double rating, int read_count)
+    constexpr Book(std::string_view author, std::string title, int year, Genre genre, double rating, int read_count)
         : author(author), title(title), year(year), genre(genre), rating(rating), read_count(read_count) {};
 
     bool operator<=>(const Book &other) const = default;

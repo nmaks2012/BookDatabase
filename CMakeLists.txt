@@ -8,7 +8,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     # Все предупреждения - это ошибки
-    add_compile_options(-Wfatal-errors -Wall -Werror)
+    # add_compile_options(-Wfatal-errors -Wall -Werror)
+    add_compile_options(-Wfatal-errors -Wall -Werror -g -O1 -Wextra -pedantic)
 
     # Не больше одной ошибки за раз
     add_compile_options(-fmax-errors=1)
@@ -16,6 +17,7 @@ endif()
 
 # Ищем необходимые библиотеки
 find_package(GTest REQUIRED)
+find_package(benchmark REQUIRED)
 
 file(GLOB HEADER_FILES "${CMAKE_SOURCE_DIR}/include/*.hpp")
 
@@ -44,6 +46,11 @@ file(GLOB TEST_SRC_FILES "${CMAKE_SOURCE_DIR}/tests/*.cpp")
 add_executable(${PROJECT_NAME}_tests "${TEST_SRC_FILES}")
 target_link_libraries(${PROJECT_NAME}_tests PRIVATE ${PROJECT_NAME}_imp GTest::GTest GTest::Main)
 target_include_directories(${PROJECT_NAME}_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+# benchmark
+add_executable(${PROJECT_NAME}_benchmark "${CMAKE_SOURCE_DIR}/benchmark/main.cpp")
+target_link_libraries(${PROJECT_NAME}_benchmark PRIVATE ${PROJECT_NAME}_imp benchmark::benchmark_main)
+target_include_directories(${PROJECT_NAME}_benchmark PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # Включаем тестирование
 enable_testing()
