@@ -1,37 +1,55 @@
 #pragma once
 
+#include <array>
 #include <format>
 #include <stdexcept>
+#include <string>
 #include <string_view>
 
 #include <boost/container/flat_map.hpp>
+#include <unordered_map>
+#include <utility>
 
 namespace bookdb {
 
 enum class Genre { Fiction, NonFiction, SciFi, Biography, Mystery, Unknown };
 
-static const boost::container::flat_map<std::string_view, Genre> map_str_to_genre{
-    {"Fiction", Genre::Fiction}, {"Mystery", Genre::Mystery},     {"NonFiction", Genre::NonFiction},
-    {"SciFi", Genre::SciFi},     {"Biography", Genre::Biography}, {"Unknown", Genre::Unknown}};
-
-static const boost::container::flat_map<Genre, std::string_view> map_genre_to_str{
-    {Genre::Fiction, "Fiction"}, {Genre::Mystery, "Mystery"},     {Genre::NonFiction, "NonFiction"},
-    {Genre::SciFi, "SciFi"},     {Genre::Biography, "Biography"}, {Genre::Unknown, "Unknown"}};
-
 constexpr Genre ConvertGenre(const std::string_view s) {
 
-    if (map_str_to_genre.contains(s)) {
-        return map_str_to_genre.at(s);
+    if (s == "Fiction") {
+        return Genre::Fiction;
+    } else if (s == "Mystery") {
+        return Genre::Mystery;
+    } else if (s == "NonFiction") {
+        return Genre::NonFiction;
+    } else if (s == "SciFi") {
+        return Genre::SciFi;
+    } else if (s == "Biography") {
+        return Genre::Biography;
+    } else if (s == "Unknown") {
+        return Genre::Unknown;
+    } else {
+        throw std::logic_error("Unsupported conversion from std::string_view to bookdb::Genre");
     }
-    throw std::logic_error{"Unsupported conversion from std::string_view to bookdb::Genre"};
 };
 
 constexpr const std::string_view ConvertGenre(const Genre g) {
 
-    if (map_genre_to_str.contains(g)) {
-        return map_genre_to_str.at(g);
+    if (g == Genre::Fiction) {
+        return "Fiction";
+    } else if (g == Genre::Mystery) {
+        return "Mystery";
+    } else if (g == Genre::NonFiction) {
+        return "NonFiction";
+    } else if (g == Genre::SciFi) {
+        return "SciFi";
+    } else if (g == Genre::Biography) {
+        return "Biography";
+    } else if (g == Genre::Unknown) {
+        return "Unknown";
+    } else {
+        throw std::logic_error{"Unsupported conversion from bookdb::Genre to std::string_view"};
     }
-    throw std::logic_error{"Unsupported conversion from bookdb::Genre to std::string_view"};
 };
 
 struct Book {
@@ -44,13 +62,13 @@ struct Book {
     double rating;
     int read_count;
 
-    constexpr Book(std::string_view author, std::string title, int year, std::string_view genre, double rating,
+    constexpr Book(std::string_view author, std::string &&title, int year, std::string_view genre, double rating,
                    int read_count)
-        : author(author), title(title), year(year), genre(ConvertGenre(genre)), rating(rating),
+        : author(author), title(std::move(title)), year(year), genre(ConvertGenre(genre)), rating(rating),
           read_count(read_count) {};
 
     constexpr Book(std::string_view author, std::string title, int year, Genre genre, double rating, int read_count)
-        : author(author), title(title), year(year), genre(genre), rating(rating), read_count(read_count) {};
+        : author(author), title(std::move(title)), year(year), genre(genre), rating(rating), read_count(read_count) {};
 
     bool operator<=>(const Book &other) const = default;
 };

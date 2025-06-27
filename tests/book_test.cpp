@@ -1,5 +1,6 @@
 #include "book.hpp"
 #include <algorithm>
+#include <boost/container/flat_map.hpp>
 #include <format>
 #include <gtest/gtest.h>
 #include <ostream>
@@ -13,7 +14,11 @@ using namespace std::literals;
 
 TEST(TestBook, ComparisonGenresAndStringView) {
     // Тестирование корректности маппинга из std::string_view в Genre и обратно
-    EXPECT_TRUE(std::ranges::all_of(bookdb::map_genre_to_str, [&](const auto &item) {
+    boost::container::flat_map<Genre, std::string> map_genre_to_str{
+        {Genre::Fiction, "Fiction"}, {Genre::Mystery, "Mystery"},     {Genre::NonFiction, "NonFiction"},
+        {Genre::SciFi, "SciFi"},     {Genre::Biography, "Biography"}, {Genre::Unknown, "Unknown"}};
+
+    EXPECT_TRUE(std::ranges::all_of(map_genre_to_str, [&](const auto &item) {
         auto [genre, sv] = item;
         return genre == bookdb::ConvertGenre(sv) && sv == bookdb::ConvertGenre(genre);
     }));

@@ -18,12 +18,12 @@ using HistogramContainer = boost::container::flat_map<std::string_view, size_t>;
 using GenreStatsContainer = boost::container::flat_map<Genre, double>;
 
 template <BookContainerLike T>
-HistogramContainer buildAuthorHistogramFlat(BookDatabase<T> &cont) {
+HistogramContainer buildAuthorHistogramFlat(const BookDatabase<T> &cont) {
 
     HistogramContainer histogram;
     histogram.reserve(cont.GetAuthors().size());
 
-    std::ranges::for_each(cont, [&](const Book &book) { histogram[book.author]++; });
+    std::ranges::for_each(cont.cbegin(), cont.cend(), [&](const Book &book) { histogram[book.author]++; });
 
     return histogram;
 }
@@ -31,18 +31,18 @@ HistogramContainer buildAuthorHistogramFlat(BookDatabase<T> &cont) {
 struct rating_sum_item {
     double sum_ratings = 0.0;
     size_t count_book = 0;
-    double Avg() { return sum_ratings / count_book; }
+    double Avg() { return count_book == 0 ? 0 : sum_ratings / count_book; }
 };
 
-template <BookIterator It>
-GenreStatsContainer calculateGenreRatings(It begin, It end) {
+template <BookIterator It, BookSentinel<It> S>
+GenreStatsContainer calculateGenreRatings(It begin, S end) {
 
     boost::container::flat_map<Genre, rating_sum_item> sum_ratings;
 
     // Заполняем значения по сумме и количеству всех рейтингов
     std::ranges::for_each(begin, end, [&](const Book &book) {
         sum_ratings[book.genre].sum_ratings += book.rating;
-        sum_ratings[book.genre].count_book += 1;
+        sum_ratings[book.genre].count_book++;
     });
 
     GenreStatsContainer ratings_avg;

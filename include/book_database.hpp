@@ -55,7 +55,7 @@ public:
         authors_.clear();
     }
 
-    const_reference back() { return books_.back(); }
+    const_reference back() const { return books_.back(); }
 
     // Standard container interface methods
     template <typename... Args>
@@ -65,7 +65,7 @@ public:
         return books_.back();
     }
 
-    template <typename BookRef>
+    template <BookRef BookRef>
     void PushBack(BookRef &&book) {
         books_.push_back(std::forward<BookRef>(book));
         AddAuthor(books_.back());

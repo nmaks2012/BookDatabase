@@ -9,31 +9,29 @@
 #include <string_view>
 #include <vector>
 
-#define BOOKS_LIST                                                                                                     \
-    {"George Orwell"sv, "1984"s, 1949, Genre::SciFi, 4., 190},                                                         \
-        {"George Orwell"sv, "Animal Farm"s, 1945, Genre::Fiction, 4.4, 143},                                           \
-        {"F. Scott Fitzgerald"sv, "The Great Gatsby"s, 1925, Genre::Fiction, 4.5, 120},                                \
-        {"Harper Lee"sv, "To Kill a Mockingbird"s, 1960, Genre::Fiction, 4.8, 156},                                    \
-        {"Jane Austen"sv, "Pride and Prejudice"s, 1813, Genre::Fiction, 4.7, 178},                                     \
-        {"J.D. Salinger"sv, "The Catcher in the Rye"s, 1951, Genre::Fiction, 4.3, 112},                                \
-        {"Aldous Huxley"sv, "Brave New World"s, 1932, Genre::SciFi, 4.5, 98},                                          \
-        {"Charlotte Brontë"sv, "Jane Eyre"s, 1847, Genre::Fiction, 4.6, 110},                                          \
-        {"J.R.R. Tolkien"sv, "The Hobbit"s, 1937, Genre::Fiction, 4.9, 203},                                           \
-        {"William Golding"sv, "Lord of the Flies"s, 1954, Genre::Fiction, 4.2, 89}
-
-#define BOOK "Author"sv, "Titile"s, 1999, Genre::Biography, 0.1, 1
-
 using namespace bookdb;
 using namespace std::string_view_literals;
 using namespace std::literals;
 using namespace comp;
+
+const std::initializer_list<Book> books_list{
+    {"George Orwell", "1984", 1949, Genre::SciFi, 4., 190},
+    {"George Orwell", "Animal Farm", 1945, Genre::Fiction, 4.4, 143},
+    {"F. Scott Fitzgerald", "The Great Gatsby", 1925, Genre::Fiction, 4.5, 120},
+    {"Harper Lee", "To Kill a Mockingbird", 1960, Genre::Fiction, 4.8, 156},
+    {"Jane Austen", "Pride and Prejudice", 1813, Genre::Fiction, 4.7, 178},
+    {"J.D. Salinger", "The Catcher in the Rye", 1951, Genre::Fiction, 4.3, 112},
+    {"Aldous Huxley", "Brave New World", 1932, Genre::SciFi, 4.5, 98},
+    {"Charlotte Brontë", "Jane Eyre", 1847, Genre::Fiction, 4.6, 110},
+    {"J.R.R. Tolkien", "The Hobbit", 1937, Genre::Fiction, 4.9, 203},
+    {"William Golding", "Lord of the Flies", 1954, Genre::Fiction, 4.2, 89}};
 
 // using TestContainer = bookdb::BookDatabase<>;
 using TestContainer = bookdb::BookDatabase<std::deque<Book>>;
 
 class TestStatistics : public ::testing::Test {
 protected:
-    TestContainer db{BOOKS_LIST};
+    TestContainer db{books_list};
 };
 
 // ############################# Тесты на заполненной базе #################################
